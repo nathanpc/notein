@@ -11,7 +11,6 @@ import com.innoveworkshop.notein.data.NoteFormat;
  * @author Nathan Campos <nathan@innoveworkshop.com>
  */
 public class Note {
-	private String title;
 	private NoteFormat format;
 	private ArrayList<String> attributes;
 	private String content;
@@ -23,7 +22,6 @@ public class Note {
 	public Note() {
 		// Setup some defaults and ensure the object is invalid in the case
 		// someone tries to save this.
-		this.title = null;
 		this.format = NoteFormat.PLAIN;
 		this.attributes = new ArrayList<String>();
 		this.content = "";
@@ -31,17 +29,13 @@ public class Note {
 	}
 
 	/**
-	 * Creates a basic note object with the minimal requirements.
+	 * Creates a note object given a path relative to the workspace root.
 	 *
-	 * @param title Note title.
-	 * @param format Format of the content.
 	 * @param path Path to the note relative to the workspace it's in.
 	 */
-	public Note(String title, NoteFormat format, String path) {
+	public Note(String path) {
 		this();
-		this.title = title;
-		this.format = format;
-		this.path = path;
+		setPath(path);
 	}
 
 	/**
@@ -50,7 +44,8 @@ public class Note {
 	 * @return Note title.
 	 */
 	public String getTitle() {
-		return this.title;
+		// TODO: Extract this from the path.
+		return null;
 	}
 
 	/**
@@ -59,7 +54,8 @@ public class Note {
 	 * @param title New note title.
 	 */
 	public void setTitle(String title) {
-		this.title = title;
+		// TODO: Check if valid for a path.
+		// TODO: Rename the file in path and apply it to the file system.
 	}
 
 	/**
@@ -77,6 +73,7 @@ public class Note {
 	 * @param format New note content format.
 	 */
 	public void setFormat(NoteFormat format) {
+		// TODO: Change the extension in the path of the note.
 		this.format = format;
 	}
 
@@ -86,6 +83,7 @@ public class Note {
 	 * @return Note attributes.
 	 */
 	public List<String> getAttributes() {
+		// TODO: Lazy load the attributes.
 		return this.attributes;
 	}
 
@@ -104,6 +102,7 @@ public class Note {
 	 * @return Note content.
 	 */
 	public String getContent() {
+		// TODO: Lazy load this.
 		return this.content;
 	}
 
@@ -131,11 +130,13 @@ public class Note {
 	 * @param path New note path.
 	 */
 	public void setPath(String path) {
+		// TODO: Check if it's a valid path.
+		// TODO: Extract the format from the path.
 		this.path = path;
 	}
 
 	@Override
 	public String toString() {
-		return this.title + "\n\n" + this.content;
+		return getTitle() + "\n\n" + getContent();
 	}
 }
