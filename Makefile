@@ -28,7 +28,7 @@ $(BUILDDIR)/stamp:
 	$(TOUCH) $@
 
 compiledb: clean
-	bear --output .vscode/compile_commands.json -- make compileall
+	bear --output .vscode/compile_commands.json -- make compile
 
 run: test
 
