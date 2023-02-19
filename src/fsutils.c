@@ -12,6 +12,66 @@
 #include <string.h>
 #include <sys/stat.h>
 #include <sys/types.h>
+#include <unistd.h>
+
+#include "strutils.h"
+
+/**
+ * Appends a path to an existing path.
+ * @warning This function will 'realloc' the path. You are responsible for
+ *          freeing this allocated memory.
+ *
+ * @param path   Path that will be resized and have another part appended to.
+ * @param append Path to be appended. May or may not start with a separator.
+ *
+ * @return Number of characters appended to the original path.
+ */
+size_t fs_pathcat(char **path, const char *append) {
+	size_t len;
+	size_t len_buf;
+	char *cur;
+	const char *buf;
+
+	/* Get the sizes. */
+	len = strlen(*path);
+	len_buf = strlen(append);
+	if (append[0] != PATH_SEP)
+		len_buf++;
+
+	/* Allocate enough space for us append the path and set our cursor. */
+	*path = (char *)realloc(*path, (len + len_buf + 1) * sizeof(char));
+	cur = *path + len;
+	len_buf = 0;
+
+	/* Append the path separator if needed. */
+	if (append[0] != PATH_SEP) {
+		*cur = PATH_SEP;
+		cur++;
+		len++;
+	}
+
+	/* Append the rest of the path. */
+	buf = append;
+	do {
+		*cur = *buf;
+		cur++;
+		buf++;
+		len++;
+	} while (*buf != '\0');
+
+	return len_buf;
+}
+
+/**
+ * Checks if a file exists in the file system.
+ *
+ * @param fname File path to be checked.
+ *
+ * @return Does this file exist?
+ */
+bool fs_exists(const char *fname) {
+	return access(fname, F_OK) == 0;
+}
 
 /**
  * Opens a directory handle for us to operate on.
@@ -48,12 +108,8 @@ char* fs_readdir(DIRHANDLE hnd, const char *path) {
 			continue;
 
 		/* Construct a proper path to the file. */
-		fname = (char*)realloc(fname,
-			(strlen(de->d_name) + strlen(path) + 2) * sizeof(char));
-		strcpy(fname, path);
-		strcat(fname, "/");
-		strcat(fname, de->d_name);
-		/* TODO: Improve this and make it platform-independent. */
+		string_copy(&fname, path);
+		fs_pathcat(&fname, de->d_name);
 
 		/* Get some data on the item. */
 		stat(fname, &st);
@@ -64,6 +120,8 @@ char* fs_readdir(DIRHANDLE hnd, const char *path) {
 	}
 
 	/* Looks like we've reached the end of the file listing. */
+	if (fname)
+		free(fname);
 	return NULL;
 }
 
