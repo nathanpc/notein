@@ -1,5 +1,5 @@
-# EntryLogger document files.
-*.eld
+# Notes directory example.
+example/
 
 # Object and executable files.
 build/
