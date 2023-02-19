@@ -1,5 +1,10 @@
 {
 	"cSpell.words": [
+		"DIRFLHANDLE",
+		"DIRHANDLE",
+		"DIRITEMHANDLE",
+		"dotfiles",
+		"fsutils",
 		"notein"
 	],
 	"C_Cpp.default.cStandard": "c89",

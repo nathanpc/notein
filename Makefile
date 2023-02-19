@@ -6,7 +6,7 @@
 include variables.mk
 
 # Sources and Objects
-SOURCES += $(SRCDIR)/main.c
+SOURCES += $(SRCDIR)/main.c $(SRCDIR)/fsutils.c
 OBJECTS := $(patsubst $(SRCDIR)/%.c, $(BUILDDIR)/%.o, $(SOURCES))
 
 # Test executable command line.
