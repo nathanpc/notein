@@ -35,8 +35,12 @@ size_t fs_pathcat(char **path, const char *append) {
 	/* Get the sizes. */
 	len = strlen(*path);
 	len_buf = strlen(append);
-	if (append[0] != PATH_SEP)
+
+	/* Do we need to make space for the path separator? */
+	if ((append[0] != PATH_SEP) &&
+			((*path == NULL) || ((*path)[len - 1] != PATH_SEP))) {
 		len_buf++;
+	}
 
 	/* Allocate enough space for us append the path and set our cursor. */
 	*path = (char *)realloc(*path, (len + len_buf + 1) * sizeof(char));
@@ -44,7 +48,7 @@ size_t fs_pathcat(char **path, const char *append) {
 	len_buf = 0;
 
 	/* Append the path separator if needed. */
-	if (append[0] != PATH_SEP) {
+	if ((*(cur - 1) != PATH_SEP) && (append[0] != PATH_SEP)) {
 		*cur = PATH_SEP;
 		cur++;
 		len++;
@@ -52,12 +56,16 @@ size_t fs_pathcat(char **path, const char *append) {
 
 	/* Append the rest of the path. */
 	buf = append;
-	do {
+	while (*buf != '\0') {
 		*cur = *buf;
+
 		cur++;
 		buf++;
 		len++;
-	} while (*buf != '\0');
+	}
+
+	/* Ensure the NULL termination of the string. */
+	*cur = '\0';
 
 	return len_buf;
 }
