@@ -73,6 +73,7 @@ note_t* note_from_fname(const char *path) {
 	struct tm _tm;
 	time_t _time;
 	const char *buf;
+	const char *ext;
 	int n;
 
 	/* Set things up. */
@@ -95,13 +96,13 @@ note_t* note_from_fname(const char *path) {
 	_tm.tm_year -= 1900;
 	note_set_date(note, mktime(&_tm));
 
+	/* Get the note format. */
+	ext = fs_extname(fname);
+	note_set_format(note, ext);
+
 	/* Get note title. */
 	buf = strrchr(fname, '_');
-	string_copy_until(&note->title, buf + 1, '.');
-	/* TODO: Change this to accommodate titles with dots in them. */
-
-	/* Get the note format. */
-	note_set_format(note, fs_extname(fname));
+	string_copy_untilp(&note->title, buf + 1, ext - 1);
 
 	return note;
 }
