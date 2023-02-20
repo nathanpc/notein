@@ -37,6 +37,9 @@ void note_set_title(note_t *note, const char *title);
 const char* note_get_format(const note_t *note);
 void note_set_format(note_t *note, const char *format);
 
+/* File operations. */
+char* note_get_fname(note_t *note);
+
 /* Debugging */
 void note_debug_print(const note_t *note);
 

@@ -170,6 +170,35 @@ void note_set_format(note_t *note, const char *format) {
 }
 
 /**
+ * Gets the canonical filename for a note.
+ *
+ * @warning This function will allocate memory for its return value. Make sure
+ *          you free this string later.
+ *
+ * @param note Note object.
+ *
+ * @return Allocated string with the canonical filename for this note.
+ */
+char* note_get_fname(note_t *note) {
+	char *fname;
+	const struct tm *time;
+	char dates[11];
+
+	/* Get date-related stuff. */
+	time = localtime(&note->date);
+	strftime(dates, sizeof(dates), "%Y-%m-%d", time);
+
+	/* Allocate enough space for our filename. */
+	fname = (char *)malloc(
+		(strlen(note->title) + strlen(note->format) + 13) * sizeof(char));
+
+	/* Copy the string over. */
+	sprintf(fname, "%s_%s.%s", dates, note->title, note->format);
+
+	return fname;
+}
+
+/**
  * Prints out everything about the note for debugging purposes.
  *
  * @param note Note object.
