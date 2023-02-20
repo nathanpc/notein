@@ -30,7 +30,7 @@ typedef DIR* DIRHANDLE;
 
 /* Directory operations. */
 DIRHANDLE fs_opendir(const char* path);
-char* fs_readdir(DIRHANDLE hnd, const char* path);
+char* fs_readdir(DIRHANDLE hnd, const char* basepath);
 int fs_closedir(DIRHANDLE hnd);
 
 /* File path operations. */

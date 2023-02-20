@@ -97,13 +97,13 @@ DIRHANDLE fs_opendir(const char* path) {
  * @warning This function allocates its return value. You are responsible for
  * freeing it.
  *
- * @param hnd  Directory handle.
- * @param path Path to the directory.
+ * @param hnd      Directory handle.
+ * @param basepath Path to the directory.
  *
  * @return Path to a regular file name in the directory or NULL if no more items
  *         are available. (This is allocated internally and must be free'd)
  */
-char* fs_readdir(DIRHANDLE hnd, const char *path) {
+char* fs_readdir(DIRHANDLE hnd, const char *basepath) {
 	const struct dirent* de;
 	struct stat st;
 	char *fname;
@@ -116,7 +116,7 @@ char* fs_readdir(DIRHANDLE hnd, const char *path) {
 			continue;
 
 		/* Construct a proper path to the file. */
-		string_copy(&fname, path);
+		string_copy(&fname, basepath);
 		fs_pathcat(&fname, de->d_name);
 
 		/* Get some data on the item. */
