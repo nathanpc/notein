@@ -82,6 +82,47 @@ bool fs_exists(const char *fname) {
 }
 
 /**
+ * A safer version of basename that does not modify the path argument and will
+ * always return a pointer inside the original path.
+ *
+ * @param path Path to get the file name from.
+ *
+ * @return A pointer to the file name inside of the path argument.
+ *
+ * @see basename
+ */
+const char* fs_basename(const char *path) {
+	const char *basename;
+
+	/* Try to find the last path separator in the string. */
+	basename = strrchr(path, PATH_SEP);
+	basename = basename ? basename + 1 : path;
+
+	return basename;
+}
+
+/**
+ * Gets the extension of a filename as a pointer inside the original path. Does
+ * not include the separating dot.
+ *
+ * @param fname Filename to get the extension from.
+ *
+ * @return Pointer inside the filename to the extension or the NULL terminator
+ *         of the string if one wasn't found.
+ *
+ * @see fs_basename
+ */
+const char* fs_extname(const char *fname) {
+	const char *buf;
+
+	/* Try to find the extension. */
+	buf = strrchr(fname, '.');
+	buf = buf ? buf + 1 : strrchr(fname, '\0');
+
+	return buf;
+}
+
+/**
  * Opens a directory handle for us to operate on.
  *
  * @param path Path to the directory.

@@ -36,6 +36,8 @@ int fs_closedir(DIRHANDLE hnd);
 /* File path operations. */
 bool fs_exists(const char *fname);
 size_t fs_pathcat(char **path, const char *append);
+const char* fs_basename(const char *path);
+const char* fs_extname(const char *fname);
 
 #ifdef __cplusplus
 }
