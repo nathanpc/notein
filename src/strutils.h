@@ -14,7 +14,9 @@
 extern "C" {
 #endif
 
+/* String copying. */
 size_t string_copy(char **dest, const char *src);
+size_t string_copy_until(char **dest, const char *src, char c);
 
 #ifdef __cplusplus
 }
