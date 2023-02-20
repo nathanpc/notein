@@ -11,6 +11,7 @@
 #include <string.h>
 
 #include "fsutils.h"
+#include "note.h"
 
 /**
  * Program's main entry point.
@@ -36,9 +37,16 @@ int main(int argc, char **argv) {
 	fname = NULL;
 	printf("Go these files:\n");
 	while ((fname = fs_readdir(dir, argv[1])) != NULL) {
-		printf("  %s\n", fname);
+		note_t *note;
+
+		printf("%s\n", fname);
+		note = note_from_fname(fname);
+		note_debug_print(note);
+		printf("\n");
+
 		free(fname);
 		fname = NULL;
+		free(note);
 	}
 
 	/* Close the directory handle. */

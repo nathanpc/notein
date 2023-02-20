@@ -6,7 +6,7 @@
 include variables.mk
 
 # Sources and Objects
-SRCNAMES  = main.c fsutils.c strutils.c
+SRCNAMES  = main.c note.c fsutils.c strutils.c
 SOURCES  += $(addprefix $(SRCDIR)/, $(SRCNAMES))
 OBJECTS  := $(patsubst $(SRCDIR)/%.c, $(BUILDDIR)/%.o, $(SOURCES))
 
