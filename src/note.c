@@ -264,6 +264,25 @@ bool note_fh_close(note_t *note) {
 }
 
 /**
+ * Slurps the entire content of a note and return it as a string.
+ *
+ * @warning This function allocates its return value. You are responsible for
+ *          freeing it.
+ *
+ * @param note Note object.
+ *
+ * @return Entire contents of a note document. (Allocated by this function)
+ */
+char* note_fh_slurp(note_t *note) {
+	/* Ensure we have opened the note file. */
+	if (note_fh_open(note, "r") == NULL)
+		return NULL;
+
+	/* Slurp it up! */
+	return fs_fslurp(note->fh);
+}
+
+/**
  * Prints out everything about the note for debugging purposes.
  *
  * @param note Note object.

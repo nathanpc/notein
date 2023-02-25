@@ -43,8 +43,9 @@ const char* note_get_format(const note_t *note);
 void note_set_format(note_t *note, const char *format);
 
 /* File operations. */
-FILE *note_fh_open(note_t *note, const char *mode);
+FILE* note_fh_open(note_t *note, const char *mode);
 bool note_fh_close(note_t *note);
+char* note_fh_slurp(note_t *note);
 char* note_get_fname(note_t *note);
 
 /* Debugging */

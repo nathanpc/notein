@@ -38,10 +38,19 @@ int main(int argc, char **argv) {
 	printf("Go these files:\n");
 	while ((fname = fs_readdir(dir, argv[1])) != NULL) {
 		note_t *note;
+		char *contents;
 
 		printf("%s\n", fname);
 		note = note_from_fname(fname);
 		note_debug_print(note);
+
+		contents = note_fh_slurp(note);
+		if (contents == NULL) {
+			printf("An error occurred while slurping the note: %s\n",
+				strerror(errno));
+		}
+		printf("---\n%s\n---\n", contents);
+		free(contents);
 		printf("\n");
 
 		free(fname);
