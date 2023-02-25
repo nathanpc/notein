@@ -28,6 +28,7 @@ note_t* note_new(void) {
 	note = (note_t *)malloc(sizeof(note_t));
 
 	/* Populate the note with some defaults. */
+	note->fh = NULL;
 	note->date = time(NULL);
 	note->title = NULL;
 	note->format = NULL;
@@ -44,6 +45,9 @@ void note_free(note_t *note) {
 	/* Do we even have anything to do? */
 	if (note == NULL)
 		return;
+
+	/* Close any open file handles. */
+	note_fh_close(note);
 
 	/* Free the fields. */
 	if (note->title)
@@ -105,6 +109,17 @@ note_t* note_from_fname(const char *path) {
 	string_copy_untilp(&note->title, buf + 1, ext - 1);
 
 	return note;
+}
+
+/**
+ * Gets the file handle associated with the note object.
+ *
+ * @param note Note object.
+ *
+ * @return Opened file handle or NULL if it hasn't been opened yet.
+ */
+FILE* note_get_fh(note_t *note) {
+	return note->fh;
 }
 
 /**
@@ -197,6 +212,55 @@ char* note_get_fname(note_t *note) {
 	sprintf(fname, "%s_%s.%s", dates, note->title, note->format);
 
 	return fname;
+}
+
+/**
+ * Opens the note file handle for reading the note's contents. This will do
+ * nothing if called on a note that already has it's file handle opened.
+ *
+ * @param note Note object.
+ * @param mode File open mode string.
+ *
+ * @return Note opened file handle or NULL in case of an error.
+ */
+FILE *note_fh_open(note_t *note, const char *mode) {
+	char *fname;
+
+	/* Do we even have to do anything? */
+	if (note->fh)
+		return note->fh;
+
+	/* Get note filename. */
+	fname = note_get_fname(note);
+
+	/* Open the note's file handle and free the filename. */
+	note->fh = fopen(fname, mode);
+	free(fname);
+
+	return note->fh;
+}
+
+/**
+ * Closes the note's file handle. Does nothing if one isn't opened.
+ *
+ * @param note Note object.
+ *
+ * @return TRUE if the operation was successful.
+ *         FALSE if an error occurred. Check errno.
+ */
+bool note_fh_close(note_t *note) {
+	int ret;
+
+	/* Do we even have to do anything? */
+	if (note->fh == NULL)
+		return true;
+
+	/* Close the file handle. */
+	ret = fclose(note->fh);
+	note->fh = NULL;
+
+	/* Return the operation status. */
+	return ret == 0;
 }
 
 /**
