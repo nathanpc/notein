@@ -18,6 +18,7 @@
 
 /**
  * Appends a path to an existing path.
+ *
  * @warning This function will 'realloc' the path. You are responsible for
  *          freeing this allocated memory.
  *
@@ -135,8 +136,9 @@ DIRHANDLE fs_opendir(const char* path) {
 
 /**
  * Gets an item from a directory.
+ *
  * @warning This function allocates its return value. You are responsible for
- * freeing it.
+ *          freeing it.
  *
  * @param hnd      Directory handle.
  * @param basepath Path to the directory.
@@ -184,4 +186,65 @@ char* fs_readdir(DIRHANDLE hnd, const char *basepath) {
  */
 int fs_closedir(DIRHANDLE hnd) {
 	return closedir(hnd);
+}
+
+/**
+ * Gets a file's content size in bytes.
+ * @warning This function will reset the file handle cursor to the beginning.
+ *
+ * @param fh Opened file handle.
+ *
+ * @return File contents size in bytes.
+ */
+size_t fs_fsize(FILE *fh) {
+	size_t len;
+
+	/* Get the length of the file. */
+	fseek(fh, 0L, SEEK_END);
+	len = ftell(fh);
+
+	/* Ensure we come back to the beginning of the file. */
+	fseek(fh, 0L, SEEK_SET);
+
+	return len;
+}
+
+/**
+ * Reads a whole file and stores it into a string.
+ *
+ * @warning This function allocates its return value. You are responsible for
+ *          freeing it.
+ *
+ * @param fh Opened file handle.
+ *
+ * @return Whole contents of the file or NULL in case of an error. (Allocated by
+ *         this function)
+ */
+char* fs_fslurp(FILE *fh) {
+	char *contents;
+	char *buf;
+	size_t len;
+	int c;
+
+	/* Get the file size. */
+	len = fs_fsize(fh);
+	if (len == 0)
+		return NULL;
+
+	/* Allocate the string to hold the contents of the file. */
+	contents = (char *)malloc((len + 1) * sizeof(char));
+	if (contents == NULL)
+		return NULL;
+
+	/* Read entire file into the string. */
+	buf = contents;
+	while ((c = fgetc(fh)) != EOF) {
+		*buf = (char)c;
+		buf++;
+	}
+
+	/* Ensure string is properly terminated. */
+	*buf = '\0';
+
+	return contents;
 }

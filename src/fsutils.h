@@ -39,6 +39,10 @@ size_t fs_pathcat(char **path, const char *append);
 const char* fs_basename(const char *path);
 const char* fs_extname(const char *fname);
 
+/* File contents operations. */
+size_t fs_fsize(FILE *fh);
+char* fs_fslurp(FILE *fh);
+
 #ifdef __cplusplus
 }
 #endif
