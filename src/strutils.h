@@ -19,6 +19,9 @@ size_t string_copy(char **dest, const char *src);
 size_t string_copy_until(char **dest, const char *src, char c);
 size_t string_copy_untilp(char **dest, const char *src, const char *p);
 
+/* String concatenation. */
+size_t string_concat(char **orig, const char *append);
+
 #ifdef __cplusplus
 }
 #endif

@@ -116,3 +116,39 @@ size_t string_copy_untilp(char **dest, const char *src, const char *p) {
 
 	return len;
 }
+
+/**
+ * Concatenates a string to another and automatically resizes the destination
+ * string to fit.
+ *
+ * @param orig   Original string to be resized and have contents appended to it.
+ * @param append String to be appended.
+ *
+ * @return Size in bytes of the new string.
+ */
+size_t string_concat(char **orig, const char *append) {
+	size_t olen;
+	size_t nlen;
+	char *obuf;
+	const char *abuf;
+
+	/* Get the overall length and allocate memory for it. */
+	olen = strlen(*orig);
+	nlen = olen + strlen(append) + 1;
+	*orig = (char *)realloc(*orig, nlen * sizeof(char));
+
+	/* Copy the new string over ot its place. */
+	obuf = *orig + olen;
+	abuf = append;
+	while (*abuf != '\0') {
+		*obuf = *abuf;
+
+		obuf++;
+		abuf++;
+	}
+
+	/* Ensure the NULL termination of the string. */
+	*obuf = '\0';
+
+	return nlen;
+}
