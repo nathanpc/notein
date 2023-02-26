@@ -96,8 +96,9 @@ note_t* note_from_fname(const char *path) {
 		return NULL;
 	}
 
-	/* Fix the year field and assign the date. */
+	/* Fix the year and month fields and assign the date. */
 	_tm.tm_year -= 1900;
+	_tm.tm_mon--;
 	note_set_date(note, mktime(&_tm));
 
 	/* Get the note format. */
@@ -225,17 +226,23 @@ char* note_get_fname(note_t *note) {
  */
 FILE *note_fh_open(note_t *note, const char *mode) {
 	char *fname;
+	char *path;
 
 	/* Do we even have to do anything? */
 	if (note->fh)
 		return note->fh;
 
-	/* Get note filename. */
+	/* Get note path. */
+	/* TODO: Implement proper workspaces and fix this. */
+	path = NULL;
+	string_copy(&path, "example/");
 	fname = note_get_fname(note);
+	string_concat(&path, fname);
+	free(fname);
 
 	/* Open the note's file handle and free the filename. */
-	note->fh = fopen(fname, mode);
-	free(fname);
+	note->fh = fopen(path, mode);
+	free(path);
 
 	return note->fh;
 }
